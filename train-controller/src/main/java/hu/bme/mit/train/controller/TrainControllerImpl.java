@@ -4,61 +4,60 @@ import hu.bme.mit.train.interfaces.TrainController;
 
 public class TrainControllerImpl implements TrainController {
 
-	private int step = 0;
-	private int referenceSpeed = 0;
-	private int speedLimit = 0;
-	private static int absSpeedLimit = 90;
-	private static final int refreshInterval = 2000;
-	private Thread thread;
+    private int step = 0;
+    private int referenceSpeed = 0;
+    private int speedLimit = 0;
+    private static int absSpeedLimit = 90;
+    private Thread thread;
 
-	public TrainControllerImpl() {
-		thread = new Thread(() -> {
-			thread.start();
-			try {
-				followSpeed();
-				Thread.sleep(refreshInterval);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		});
-	}
+    public TrainControllerImpl() {
+        thread = new Thread(() -> {
+            thread.start();
+            try {
+                followSpeed();
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
-	@Override
-	public void followSpeed() {
-		if (referenceSpeed < 0) {
-			referenceSpeed = 0;
-		} else {
-		    if(referenceSpeed+step > 0) {
+    @Override
+    public void followSpeed() {
+        if (referenceSpeed < 0) {
+            referenceSpeed = 0;
+        } else {
+            if (referenceSpeed + step > 0) {
                 referenceSpeed += step;
             } else {
-		        referenceSpeed = 0;
+                referenceSpeed = 0;
             }
-		}
+        }
 
-		enforceSpeedLimit();
-	}
+        enforceSpeedLimit();
+    }
 
-	@Override
-	public int getReferenceSpeed() {
-		return referenceSpeed;
-	}
+    @Override
+    public int getReferenceSpeed() {
+        return referenceSpeed;
+    }
 
-	@Override
-	public void setSpeedLimit(int speedLimit) {
-		this.speedLimit = Math.min(speedLimit, absSpeedLimit);
-		enforceSpeedLimit();
-		
-	}
+    @Override
+    public void setSpeedLimit(int speedLimit) {
+        this.speedLimit = Math.min(speedLimit, absSpeedLimit);
+        enforceSpeedLimit();
 
-	private void enforceSpeedLimit() {
-		if (referenceSpeed > speedLimit) {
-			referenceSpeed = speedLimit;
-		}
-	}
+    }
 
-	@Override
-	public void setJoystickPosition(int joystickPosition) {
-		this.step = joystickPosition;		
-	}
+    private void enforceSpeedLimit() {
+        if (referenceSpeed > speedLimit) {
+            referenceSpeed = speedLimit;
+        }
+    }
+
+    @Override
+    public void setJoystickPosition(int joystickPosition) {
+        this.step = joystickPosition;
+    }
 
 }
