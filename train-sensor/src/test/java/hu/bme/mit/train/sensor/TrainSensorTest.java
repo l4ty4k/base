@@ -20,6 +20,11 @@ public class TrainSensorTest {
     }
 
     @Test
+    public void getSpeedLimitTest(){
+        assert trainSensor.getSpeedLimit() == 5;
+    }
+
+    @Test
     public void absoluteMarginByUnderMin() {
         trainSensor.overrideSpeedLimit(-1);
         verify(mockTrainUser, times(1)).setAlarmState(true);
